@@ -95,5 +95,6 @@ data burst:
 
 # Other similar projects & info
 
-<https://forums.raspberrypi.com/viewtopic.php?t=58420>
-<http://www.hoagieshouse.com/RaspberryPi/RCSockets/RCPlug.html>
+* <https://forums.raspberrypi.com/viewtopic.php?t=58420>
+
+* <http://www.hoagieshouse.com/RaspberryPi/RCSockets/RCPlug.html>
