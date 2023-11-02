@@ -6,8 +6,8 @@ remote control signals.
 FIXME: stretch goal is to also have it receive and decode signals from
 other 433 MHz OOK remotes, so it can clone them.
 
-Built on a Seeed Studios XIAO RP2040 and a cheap-ass 433 MHz OOK
-transmitter from Ebay.
+Built on a Seeed Studios XIAO RP2040 and a FS1000A (433 MHz ASK
+transmitter).
 
 * <https://wiki.seeedstudio.com/XIAO-RP2040/>
 
@@ -95,6 +95,26 @@ data burst:
 
 # Other similar projects & info
 
+* <http://www.ignorantofthings.com/2018/11/reverse-engineering-433mhz-remote.html>
+
 * <https://forums.raspberrypi.com/viewtopic.php?t=58420>
 
 * <http://www.hoagieshouse.com/RaspberryPi/RCSockets/RCPlug.html>
+
+
+## Modulation theory
+
+On-Off Keying: <https://en.wikipedia.org/wiki/On%E2%80%93off_keying>
+
+Amplitude Shift Keying: <https://en.wikipedia.org/wiki/Amplitude-shift_keying>
+
+
+## Radio tranceiver
+
+* Martyn Davies' excellent explanation of ASK,
+  OOK, and the FS1000A/XY-MK-5V transceiver:
+  <https://www.youtube.com/watch?v=w6V9NyXwohI>
+
+* <https://theorycircuit.com/fs1000a-433mhz-rf-transmitter-and-receiver-brief-note/>
+
+* <https://components101.com/modules/433-mhz-rf-transmitter-module>
