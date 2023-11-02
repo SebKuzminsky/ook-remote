@@ -58,9 +58,39 @@ I used audacity to clean up the recordings:
     * Header: RAW (header-less)
     * Encoding: Signed 8-bit PCM
 
-I then used the Universal Radio Hacker (URH,
-<https://github.com/jopohl/urh>) to analyze the recorded signals.
-URH needs the filename extensions to be `.complex16s`.
+
+## Demodulating with Universal Radio Hacker
+
+I used Universal Radio Hacker (URH, <https://github.com/jopohl/urh>) to
+analyze the recorded signals.  URH needs the filename extensions to be
+`.complex16s`.
+
+This is what the remote sends when I click the "On" button.  We can see
+one "header" burst, followed by three similar-looking burst:
+
+!["on" waveform picture](pics/on-waveform.png)
+
+Zooming in on the second burst we can see the On-Off Keying, where the
+constant-frequency carrier wave is sometimes transmitted and sometimes
+not:
+
+!["on" waveform zoomed picture](pics/on-waveform-zoom.png)
+
+Zooming in more and selecting what looks like a single symbol/bit we
+get an approximate symbol size of 621 samples:
+
+![one bit picture](pics/on-one-symbol.png)
+
+I then switched to the demodulated signal view and adjusted the noise
+and center to clean up the decoding.  This is starting to look good:
+
+![demodulated picture](pics/on-demodulated.png)
+
+Loading the "off" signal, demodulating it in the same way, and comparing
+them.  We see that there's a small difference in the middle of the
+data burst:
+
+![on-vs-off picture](pics/on-vs-off.png)
 
 
 # Other similar projects & info
