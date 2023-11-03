@@ -118,3 +118,5 @@ Amplitude Shift Keying: <https://en.wikipedia.org/wiki/Amplitude-shift_keying>
 * <https://theorycircuit.com/fs1000a-433mhz-rf-transmitter-and-receiver-brief-note/>
 
 * <https://components101.com/modules/433-mhz-rf-transmitter-module>
+
+* cc1101 based project: <https://github.com/mcore1976/cc1101-tool>
