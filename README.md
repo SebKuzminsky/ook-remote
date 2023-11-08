@@ -17,7 +17,7 @@ transmitter).
 # Reverse engineering the original remote's signal
 
 The immediate goal is to clone the remote for a WEN 3410 air filter
-<https://wenproducts.com/products/Air-Filtration-System-Item-3410>.
+(<https://wenproducts.com/products/Air-Filtration-System-Item-3410>).
 
 I used a HackRF One (<https://greatscottgadgets.com/hackrf/one/>) and
 GQRX to find the frequency of the original remote.
