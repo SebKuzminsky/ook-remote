@@ -1,0 +1,58 @@
+.program ook
+SET PINS 1
+SET PINS 0
+
+.wrap_target
+    OUT PINS, 1
+.wrap
+
+
+% c-sdk {
+
+#include "hardware/clocks.h"
+#include "hardware/gpio.h"
+
+
+static PIO ook_pio;
+static uint ook_sm;
+
+static inline void ook_init(PIO pio, uint ook_offset, uint ook_gpio, uint microseconds_per_bit) {
+    ook_pio = pio;
+
+    // Claim a state machine, panic if we can't get one.
+    ook_sm = pio_claim_unused_sm(ook_pio, true);
+
+    // Use 1 gpio, starting at `ook_gpio`, and set it to output.
+    pio_sm_set_consecutive_pindirs(ook_pio, ook_sm, ook_gpio, 1, true);
+
+    pio_sm_config c = ook_program_get_default_config(ook_offset);
+
+    sm_config_set_out_pins(&c, ook_gpio, 1); // for OUT
+    sm_config_set_set_pins(&c, ook_gpio, 1); // for SET
+
+    // shift to left, autopull enabled, shift 32 bits before replenishing from TX FIFO
+    sm_config_set_out_shift(&c, false, true, 32);
+
+    // shift to left, autopull disabled, shift 32 bits before replenishing from TX FIFO
+    // sm_config_set_out_shift(&c, false, false, 32);
+
+    // don't join FIFOs
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_NONE);
+
+    // Run this PIO state machine as slow as possible, ~2kHz.  Since we
+    // need 32 identical consecutive GPIO readings, this means about a
+    // 16 ms debounce settling period.
+    // 125 MHz sysclk / 65535 = ~2 kHz, ~500 µs/bit
+    sm_config_set_clkdiv_int_frac(&c, 65535, 0);
+
+    pio_sm_init(ook_pio, ook_sm, ook_offset, &c);
+
+    pio_sm_set_enabled(ook_pio, ook_sm, true);
+}
+
+
+static void ook_send(uint32_t data) {
+    pio_sm_put_blocking(ook_pio, ook_sm, data);
+}
+
+%}
