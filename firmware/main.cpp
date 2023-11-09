@@ -20,7 +20,12 @@ uint const debug_gpio = 1;
 void process_input(char const * in) {
     if (strncasecmp("tx", in, 2) == 0) {
         uint32_t data = 0;
-        sscanf(&in[2], "%lx", &data);
+        int r;
+        r = sscanf(&in[2], "%lx", &data);
+        if (r != 1) {
+            printf("failed to parse '%s'\n", in);
+            return;
+        }
         printf("tx 0x%08lx\n", data);
         gpio_put(debug_gpio, 1);
         ook_send(data);
