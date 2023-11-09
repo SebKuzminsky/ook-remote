@@ -1,20 +1,5 @@
 #!/usr/bin/env python3
-
 import sys
-
-# one sample is 0.5 us
-# one bit is 312 us (625 samples)
-# one nibble is 1250 us
-#
-# 10k us is 8 nibbles
-#
-# 0000aaaa aaaaaaaa
-# 00000000 [Pause: 19838 samples, 10k us]
-# e8e8e8e8 e8e8e8ee
-# 00000000 [Pause: 19888 samples, 10k us]
-# e8e8e8e8 e8e8e8ee
-# 00000000 [Pause: 19818 samples, 10k us]
-# e8e8e8e8 e8e8e8ee
 
 if len(sys.argv) != 2:
     print("usage: ook-remote FILE.ook")
