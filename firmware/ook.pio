@@ -16,7 +16,7 @@ SET PINS 0
 static PIO ook_pio;
 static uint ook_sm;
 
-static inline void ook_init(PIO pio, uint ook_offset, uint ook_gpio, uint microseconds_per_bit) {
+static inline void ook_init(PIO pio, uint ook_gpio, uint microseconds_per_bit) {
     ook_pio = pio;
 
     // Claim a state machine, panic if we can't get one.
@@ -25,7 +25,7 @@ static inline void ook_init(PIO pio, uint ook_offset, uint ook_gpio, uint micros
     // Use 1 gpio, starting at `ook_gpio`, and set it to output.
     pio_sm_set_consecutive_pindirs(ook_pio, ook_sm, ook_gpio, 1, true);
 
-    pio_sm_config c = ook_program_get_default_config(ook_offset);
+    pio_sm_config c = ook_program_get_default_config(0);
 
     sm_config_set_out_pins(&c, ook_gpio, 1); // for OUT
     sm_config_set_set_pins(&c, ook_gpio, 1); // for SET
@@ -51,7 +51,7 @@ static inline void ook_init(PIO pio, uint ook_offset, uint ook_gpio, uint micros
     uint32_t div32 = (((sysclk_hz/1000) * microseconds_per_bit) / 1000);
     sm_config_set_clkdiv_int_frac(&c, div32, 0);
 
-    pio_sm_init(ook_pio, ook_sm, ook_offset, &c);
+    pio_sm_init(ook_pio, ook_sm, 0, &c);
 
     pio_sm_set_enabled(ook_pio, ook_sm, true);
 }

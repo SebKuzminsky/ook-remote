@@ -68,8 +68,8 @@ int main() {
     gpio_set_function(ook_gpio, GPIO_FUNC_PIO0);
     gpio_set_dir(ook_gpio, true);  // output
 
-    uint ook_offset = pio_add_program(pio, &ook_program);
-    ook_init(pio, ook_offset, ook_gpio, ook_microseconds_per_bit);
+    pio_add_program_at_offset(pio, &ook_program, 0);
+    ook_init(pio, ook_gpio, ook_microseconds_per_bit);
 
     for (;;) {
         read_serial();
