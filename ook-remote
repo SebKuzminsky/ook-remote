@@ -1,16 +1,40 @@
 #!/usr/bin/env python3
+
+import json
 import sys
 
 if len(sys.argv) != 2:
     print("usage: ook-remote FILE.ook")
     sys.exit(1)
 
-with open(sys.argv[1]) as ook:
-    lines = ook.readlines()
+# Everything before the first empty line is the json header.
+# Everything after the first empty line is the data to transmit.
+header_str = ""
+data = []
+reading_header = True
+with open(sys.argv[1]) as ook_file:
+    for line in ook_file:
+        line = line.strip()
+        print(f"{line=}")
+        if reading_header:
+            if line == "":
+                reading_header = False
+                continue
+            header_str += line
+        else:
+            if line == "":
+                continue
+            data.append(line)
+
+print(f"{header_str=}")
+print(f"{data=}")
+
+header = json.loads(header_str)
+print(f"{header=}")
 
 with open('/dev/ttyACM0', 'w') as serial:
-    for line in lines:
-        line = line.strip()
-        if line == "":
-            continue
+    if 'us-per-bit' in header:
+        print(f'us-per-bit{header["us-per-bit"]}', file=serial)
+
+    for line in data:
         print(f'tx{line}', file=serial)
