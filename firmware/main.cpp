@@ -54,7 +54,7 @@ void read_serial(void) {
 int main() {
     PIO pio = pio0;
     uint const ook_gpio = 0;
-    uint const ook_microseconds_per_bit = 625;
+    uint const ook_microseconds_per_bit = 312;
 
     stdio_init_all();
     clocks_init();
