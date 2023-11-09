@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+
 # one sample is 0.5 us
 # one bit is 312 us (625 samples)
 # one nibble is 1250 us
@@ -14,18 +16,16 @@
 # 00000000 [Pause: 19818 samples, 10k us]
 # e8e8e8e8 e8e8e8ee
 
+if len(sys.argv) != 2:
+    print("usage: ook-remote FILE.ook")
+    sys.exit(1)
+
+with open(sys.argv[1]) as ook:
+    lines = ook.readlines()
+
 with open('/dev/ttyACM0', 'w') as serial:
-    print('tx0000aaaa', file=serial)
-    print('txaaaaaaaa', file=serial)
-    print('tx0', file=serial)
-
-    print('txe8e8e8e8', file=serial)
-    print('txe8e8e8ee', file=serial)
-    print('tx0', file=serial)
-
-    print('txe8e8e8e8', file=serial)
-    print('txe8e8e8ee', file=serial)
-    print('tx0', file=serial)
-
-    print('txe8e8e8e8', file=serial)
-    print('txe8e8e8ee', file=serial)
+    for line in lines:
+        line = line.strip()
+        if line == "":
+            continue
+        print(f'tx{line}', file=serial)
