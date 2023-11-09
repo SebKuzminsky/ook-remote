@@ -33,6 +33,7 @@ target_link_libraries(
     ${PROGRAM_NAME}
     pico_stdlib
     hardware_pio
+    hardware_clocks
 )
 
 pico_enable_stdio_usb(${PROGRAM_NAME} TRUE)

@@ -1,7 +1,9 @@
 #include <cstdio>
 #include <string.h>
 #include <stdlib.h>
-#include <pico/stdlib.h>
+
+#include "pico/stdlib.h"
+#include "hardware/clocks.h"
 
 #include "ook.pio.h"
 
@@ -13,6 +15,7 @@ int main() {
     uint const debug_gpio = 1;
 
     stdio_init_all();
+    clocks_init();
 
     gpio_init(debug_gpio);
     gpio_set_function(ook_gpio, GPIO_FUNC_SIO);

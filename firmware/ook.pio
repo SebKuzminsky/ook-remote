@@ -39,11 +39,17 @@ static inline void ook_init(PIO pio, uint ook_offset, uint ook_gpio, uint micros
     // don't join FIFOs
     sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_NONE);
 
-    // Run this PIO state machine as slow as possible, ~2kHz.  Since we
-    // need 32 identical consecutive GPIO readings, this means about a
-    // 16 ms debounce settling period.
-    // 125 MHz sysclk / 65535 = ~2 kHz, ~500 µs/bit
-    sm_config_set_clkdiv_int_frac(&c, 65535, 0);
+    //
+    // Set the clock divider of this PIO instance such that each clock
+    // cycle takes `microseconds_per_bit`.  The system clock runs at
+    // 125 MHz by default.
+    //
+    // sysclk / div = 1e6 / microseconds_per_bit
+    // div = (sysclk * microseconds_per_bit) / 1e6
+    //
+    uint32_t sysclk_hz = clock_get_hz(clk_sys);
+    uint32_t div32 = (((sysclk_hz/1000) * microseconds_per_bit) / 1000);
+    sm_config_set_clkdiv_int_frac(&c, div32, 0);
 
     pio_sm_init(ook_pio, ook_sm, ook_offset, &c);
 
