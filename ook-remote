@@ -15,7 +15,6 @@ reading_header = True
 with open(sys.argv[1]) as ook_file:
     for line in ook_file:
         line = line.strip()
-        print(f"{line=}")
         if reading_header:
             if line == "":
                 reading_header = False
@@ -26,11 +25,7 @@ with open(sys.argv[1]) as ook_file:
                 continue
             data.append(line)
 
-print(f"{header_str=}")
-print(f"{data=}")
-
 header = json.loads(header_str)
-print(f"{header=}")
 
 with open('/dev/ttyACM0', 'w') as serial:
     if 'us-per-bit' in header:
