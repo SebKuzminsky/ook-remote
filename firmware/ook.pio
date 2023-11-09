@@ -14,17 +14,24 @@ SET PINS 0
 
 
 static PIO ook_pio;
+static uint ook_gpio;
+
 static uint ook_sm;
 
-static inline void ook_init(PIO pio, uint ook_gpio, uint microseconds_per_bit) {
+
+static inline void ook_init(PIO pio, uint gpio) {
     ook_pio = pio;
+    ook_gpio = gpio;
 
     // Claim a state machine, panic if we can't get one.
     ook_sm = pio_claim_unused_sm(ook_pio, true);
 
     // Use 1 gpio, starting at `ook_gpio`, and set it to output.
     pio_sm_set_consecutive_pindirs(ook_pio, ook_sm, ook_gpio, 1, true);
+}
 
+
+static inline void ook_start(uint microseconds_per_bit) {
     pio_sm_config c = ook_program_get_default_config(0);
 
     sm_config_set_out_pins(&c, ook_gpio, 1); // for OUT

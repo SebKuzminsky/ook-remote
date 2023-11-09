@@ -30,6 +30,18 @@ void process_input(char const * in) {
         gpio_put(debug_gpio, 1);
         ook_send(data);
         gpio_put(debug_gpio, 0);
+
+    } else if (strncasecmp("us-per-bit", in, 10) == 0) {
+        uint us_per_bit = 0;
+        int r;
+        r = sscanf(&in[10], "%u", &us_per_bit);
+        if (r != 1) {
+            printf("failed to parse '%s'\n", in);
+            return;
+        }
+        printf("us-per-bit %u\n", us_per_bit);
+        ook_start(us_per_bit);
+
     } else {
         printf("unknown input '%s'\n", in);
     }
@@ -57,9 +69,8 @@ void read_serial(void) {
 
 
 int main() {
-    PIO pio = pio0;
+    PIO ook_pio = pio0;
     uint const ook_gpio = 0;
-    uint const ook_microseconds_per_bit = 312;
 
     stdio_init_all();
     clocks_init();
@@ -73,8 +84,9 @@ int main() {
     gpio_set_function(ook_gpio, GPIO_FUNC_PIO0);
     gpio_set_dir(ook_gpio, true);  // output
 
-    pio_add_program_at_offset(pio, &ook_program, 0);
-    ook_init(pio, ook_gpio, ook_microseconds_per_bit);
+    pio_add_program_at_offset(ook_pio, &ook_program, 0);
+    ook_init(ook_pio, ook_gpio);
+    ook_start(312);
 
     for (;;) {
         read_serial();
