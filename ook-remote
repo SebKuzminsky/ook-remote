@@ -31,9 +31,32 @@ with open(args.OOK_FILE) as ook_file:
 
 header = json.loads(header_str)
 
-with serial.Serial(args.device, baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=0) as s:
-    if 'us-per-bit' in header:
-        s.write('us-per-bit{}\n'.format(header["us-per-bit"]).encode())
+try:
+    s = serial.Serial(
+            port=args.device,
+            baudrate=115200,
+            bytesize=8,
+            parity='N',
+            stopbits=1,
+            exclusive=True,
+            xonxoff=None,
+            rtscts=True,
+            dsrdtr=None,
+            write_timeout=None,
+            timeout=None,
+        )
+except Exception as e:
+    print(f"failed to open {args.device}:")
+    raise e
 
-    for line in data:
-        s.write('tx{}\n'.format(line).encode())
+if 'us-per-bit' in header:
+    s.write('us-per-bit{}\n'.format(header["us-per-bit"]).encode('utf-8'))
+
+for line in data:
+    s.write('tx{}\n'.format(line).encode('utf-8'))
+
+# Without this delay, not all written data makes it to the device.
+# Calling s.flush() and s.close() instead of time.sleep() doesn't fix
+# the problem.
+import time
+time.sleep(0.1)
