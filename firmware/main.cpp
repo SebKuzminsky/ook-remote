@@ -14,6 +14,12 @@
 uint const debug_gpio = 1;
 
 
+bool debug_flag = false;
+
+#define debug(fmt, ...) \
+    do { if (debug_flag) printf(fmt, ## __VA_ARGS__); } while (0)
+
+
 // Process commands received from the computer via USB serial.
 // Valid input strings:
 //     'txN': N is a 32-bit hex string.  Transmit the hex string.
@@ -26,7 +32,7 @@ void process_input(char const * in) {
             printf("failed to parse '%s'\n", in);
             return;
         }
-        printf("tx 0x%08lx\n", data);
+        debug("tx 0x%08lx\n", data);
         gpio_put(debug_gpio, 1);
         ook_send(data);
         gpio_put(debug_gpio, 0);
@@ -39,8 +45,12 @@ void process_input(char const * in) {
             printf("failed to parse '%s'\n", in);
             return;
         }
-        printf("us-per-bit %u\n", us_per_bit);
+        debug("us-per-bit %u\n", us_per_bit);
         ook_start(us_per_bit);
+
+    } else if (strncasecmp("debug", in, 5) == 0) {
+        debug_flag = !debug_flag;
+        debug("debug is %d\n", debug_flag);
 
     } else {
         printf("unknown input '%s'\n", in);
