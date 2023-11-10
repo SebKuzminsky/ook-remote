@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import serial
 
 
 parser = argparse.ArgumentParser(description="On/Off Keying Remote CLI")
@@ -30,9 +31,9 @@ with open(args.OOK_FILE) as ook_file:
 
 header = json.loads(header_str)
 
-with open(args.device, 'w') as serial:
+with serial.Serial(args.device, baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=0) as s:
     if 'us-per-bit' in header:
-        print(f'us-per-bit{header["us-per-bit"]}', file=serial)
+        s.write('us-per-bit{}\n'.format(header["us-per-bit"]).encode())
 
     for line in data:
-        print(f'tx{line}', file=serial)
+        s.write('tx{}\n'.format(line).encode())
