@@ -1,17 +1,41 @@
 # Introduction
 
-This is a transmitter for 433 MHz On-Off Keyed/Amplitude Shift Keyed
-remote control signals.
+This is a minimal effort transmitter for 433 MHz On-Off Keyed/Amplitude
+Shift Keyed remote control signals.
 
-FIXME: stretch goal is to also have it receive and decode signals from
-other 433 MHz OOK remotes, so it can clone them.
-
-Built on a Seeed Studios XIAO RP2040 and a FS1000A (433 MHz ASK
+Built using a Seeed Studios XIAO RP2040 and a FS1000A (433 MHz ASK
 transmitter).
 
-* <https://wiki.seeedstudio.com/XIAO-RP2040/>
+* <https://wiki.seeedstudio.com/XIAO-RP2040/> ![xiao rp2040
+pinout](doc/xiao-rp2040-pinout.jpg)
 
-* <https://www.ebay.com/itm/204169085885>
+* <https://components101.com/modules/433-mhz-rf-transmitter-module>
+![fs1000a pinout](doc/fs1000a.jpg)
+
+Some versions of the FS1000A use two coil inductors (as pictured above),
+and some use just one coil and one surface mount inductor on the back
+of the board.  I think both versions should work just fine.
+
+
+# Wiring
+
+If you intend to use the enclosure, make sure to route the wires so
+they don't interfere with the "clamp" that holds the Xiao RP2040 board
+in place.
+
+Super simple wiring:
+
+```
+Xiao RP2040      | FS1000A
+-----------------+--------
+Vbus/5V          | Vcc
+GND              | GND
+GPIO0 (P0/TX/D6) | ATAD
+```
+
+Solder a 1/4 wave antenna (173 mm of wire) to the FS1000A antenna via.
+NOTE: Carefully select the correct hole for this, as the silkscreen on
+these cheap boards is all over the place.
 
 
 # Reverse engineering the original remote's signal
@@ -28,35 +52,18 @@ and "off" buttons:
 Capture:
 
 ```
-$ hackrf_transfer -s 2000000 -f 433920000 -r on.iq
-$ hackrf_transfer -s 2000000 -f 433920000 -r off.iq
+$ hackrf_transfer -s 2000000 -f 433920000 -r on.complex16
+$ hackrf_transfer -s 2000000 -f 433920000 -r off.complex16
 ```
 
 Replay:
 
 ```
-$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t on.iq
-$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t on.iq
-$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t on.iq
-$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t off.iq
+$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t on.complex16
+$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t on.complex16
+$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t on.complex16
+$ hackrf_transfer -s 2000000 -f 433920000 -a1 -x24 -t off.complex16
 ```
-
-I used audacity to clean up the recordings:
-
-* File / New
-
-* File / Import / Raw Data...
-    * Encoding: Signed 8-bit PCM
-    * Channels: 2
-    * Sample Rate: 2000000
-
-* Select the waveform
-
-* "Trim audio outside selection" (tool icon looks like `---/\/\/\/---`)
-
-* File / Export / Export Audio...
-    * Header: RAW (header-less)
-    * Encoding: Signed 8-bit PCM
 
 
 ## Demodulating with Universal Radio Hacker
@@ -77,7 +84,7 @@ not:
 !["on" waveform zoomed picture](pics/on-waveform-zoom.png)
 
 Zooming in more and selecting what looks like a single symbol/bit we
-get an approximate symbol size of 621 samples:
+get an approximate symbol size of 621 samples, or 310 microseconds:
 
 ![one bit picture](pics/on-one-symbol.png)
 
@@ -93,13 +100,7 @@ data burst:
 ![on-vs-off picture](pics/on-vs-off.png)
 
 
-# Other similar projects & info
-
-* <http://www.ignorantofthings.com/2018/11/reverse-engineering-433mhz-remote.html>
-
-* <https://forums.raspberrypi.com/viewtopic.php?t=58420>
-
-* <http://www.hoagieshouse.com/RaspberryPi/RCSockets/RCPlug.html>
+# FS1000A radio info
 
 
 ## Modulation theory
@@ -117,6 +118,22 @@ Amplitude Shift Keying: <https://en.wikipedia.org/wiki/Amplitude-shift_keying>
 
 * <https://theorycircuit.com/fs1000a-433mhz-rf-transmitter-and-receiver-brief-note/>
 
-* <https://components101.com/modules/433-mhz-rf-transmitter-module>
 
-* cc1101 based project: <https://github.com/mcore1976/cc1101-tool>
+# Other similar projects & info
+
+* <http://www.ignorantofthings.com/2018/11/reverse-engineering-433mhz-remote.html>
+
+* <https://forums.raspberrypi.com/viewtopic.php?t=58420>
+
+* <http://www.hoagieshouse.com/RaspberryPi/RCSockets/RCPlug.html>
+
+
+## Alternative radio
+
+The FS1000A is the simplest radio transmitter imaginable, and inexpensive.
+
+It's tempting to build a much more capable radio toy, perhaps using
+the [CC1101](https://www.ti.com/product/CC1101) (available on ebay,
+$10 board including SMA connector and antenna).
+
+CC1101 based project: <https://github.com/mcore1976/cc1101-tool>
