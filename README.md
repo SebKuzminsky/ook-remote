@@ -33,7 +33,8 @@ GND              | GND
 GPIO0 (P0/TX/D6) | ATAD
 ```
 
-Solder a 1/4 wave antenna (173 mm of wire) to the FS1000A antenna via.
+The antenna is optional, for me it worked fine without.  If you want one,
+solder a 1/4 wave antenna (173 mm of wire) to the FS1000A antenna via.
 NOTE: Carefully select the correct hole for this, as the silkscreen on
 these cheap boards is all over the place.
 
