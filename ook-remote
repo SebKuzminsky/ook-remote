@@ -38,15 +38,12 @@ try:
             bytesize=8,
             parity='N',
             stopbits=1,
-            exclusive=True,
             xonxoff=None,
             rtscts=True,
-            dsrdtr=None,
-            write_timeout=None,
-            timeout=None,
+            dsrdtr=None
         )
 except Exception as e:
-    print(f"failed to open {args.device}:")
+    print("failed to open {}".format(args.device))
     raise e
 
 if 'us-per-bit' in header:
