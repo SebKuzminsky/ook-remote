@@ -28,6 +28,7 @@ with open(args.OOK_FILE) as ook_file:
             if line == "":
                 continue
             data.append(line)
+data.append('0')
 
 header = json.loads(header_str)
 
