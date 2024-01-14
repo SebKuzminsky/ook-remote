@@ -86,7 +86,7 @@ int main() {
     clocks_init();
 
     gpio_init(debug_gpio);
-    gpio_set_function(ook_gpio, GPIO_FUNC_SIO);
+    gpio_set_function(debug_gpio, GPIO_FUNC_SIO);
     gpio_set_dir(debug_gpio, true);  // output
     gpio_put(debug_gpio, 0);
 
