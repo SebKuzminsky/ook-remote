@@ -3,8 +3,10 @@
 This is a minimal effort transmitter for 433 MHz On-Off Keyed/Amplitude
 Shift Keyed remote control signals.
 
-Built using a Seeed Studios XIAO RP2040 and a FS1000A (433 MHz ASK
-transmitter).
+![ook-remote with case open](pics/ook-remote.jpg)
+
+It's built using a Seeed Studios XIAO RP2040 and a FS1000A (433 MHz
+ASK transmitter).
 
 * <https://wiki.seeedstudio.com/XIAO-RP2040/> ![xiao rp2040
 pinout](doc/xiao-rp2040-pinout.jpg)
